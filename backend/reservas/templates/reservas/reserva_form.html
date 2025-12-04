@@ -1,0 +1,16 @@
+<h1>Reservar Recurso</h1>
+
+{% if form.errors %}
+    <div style="color: red;">
+        Houve um erro na reserva. Verifique a mensagem abaixo.
+                    </div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    
+    {{ form.as_p }}     
+    <button type="submit">Confirmar Reserva</button>
+</form>
+
+<p><a href="{% url 'home' %}">Voltar para a Home</a></p>

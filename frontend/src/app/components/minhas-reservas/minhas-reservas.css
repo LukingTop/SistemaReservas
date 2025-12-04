@@ -1,0 +1,63 @@
+.container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; color: #333; }
+
+.item-reserva {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.info h3 { margin: 0 0 5px 0; color: #2980b9; }
+.info p { margin: 3px 0; color: #555; }
+
+.btn-cancelar {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-cancelar:hover { background-color: #c0392b; }
+.empty { text-align: center; color: #777; margin-top: 20px; }
+
+
+.header-reserva {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.header-reserva h3 {
+  margin: 0;
+}
+
+.status-badge {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  background-color: #95a5a6; 
+}
+
+
+.status-badge.confirmada { background-color: #27ae60; } 
+.status-badge.pendente { background-color: #f39c12; }   
+.status-badge.rejeitada { background-color: #c0392b; } 

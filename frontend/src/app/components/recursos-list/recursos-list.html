@@ -1,0 +1,28 @@
+<div class="container">
+  <h2>Recursos Disponíveis</h2>
+
+  @if (recursos.length === 0) {
+    <p class="empty-message">Carregando recursos ou lista vazia...</p>
+  }
+
+  <div class="card-list">
+    @for (recurso of recursos; track recurso.id) {
+      <div class="card">
+        <h3>{{ recurso.nome }}</h3>
+        
+        <div class="card-info">
+          <p><strong>Capacidade:</strong> {{ recurso.capacidade_maxima }} pessoas</p>
+          <p><strong>Local:</strong> {{ recurso.localizacao }}</p>
+        </div>
+
+        @if (recurso.descricao) {
+          <p class="descricao">{{ recurso.descricao }}</p>
+        }
+
+        <a [routerLink]="['/reservar', recurso.id]" class="btn-reservar">
+          Reservar
+        </a>
+      </div>
+    }
+  </div>
+</div>

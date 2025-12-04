@@ -1,0 +1,31 @@
+<div class="login-container"> <h2>Criar Conta</h2>
+
+  @if (mensagemErro) {
+    <div class="error-msg">
+      {{ mensagemErro }}
+    </div>
+  }
+
+  <form (ngSubmit)="fazerCadastro()">
+    <div class="form-group">
+      <label>Usuário:</label>
+      <input type="text" [(ngModel)]="usuario.username" name="username" required>
+    </div>
+
+    <div class="form-group">
+      <label>Email:</label>
+      <input type="email" [(ngModel)]="usuario.email" name="email" required>
+    </div>
+
+    <div class="form-group">
+      <label>Senha:</label>
+      <input type="password" [(ngModel)]="usuario.password" name="password" required>
+    </div>
+
+    <button type="submit" class="btn-login" style="background-color: #28a745;">Cadastrar</button>
+    
+    <div style="margin-top: 15px; text-align: center;">
+      <a routerLink="/login">Já tem conta? Faça Login</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>Meus Agendamentos</h2>
+
+  @if (carregando) { <p>Carregando...</p> }
+  @if (!carregando && reservas.length === 0) { <p class="empty">Você ainda não tem reservas.</p> }
+
+  <div class="lista">
+    @for (reserva of reservas; track reserva.id) {
+      <div class="item-reserva">
+        <div class="info">
+          <div class="header-reserva">
+            <h3>{{ reserva.recurso_nome }}</h3>
+            
+            <span class="status-badge" 
+                  [class.confirmada]="reserva.status === 'C'" 
+                  [class.pendente]="reserva.status === 'P'"
+                  [class.rejeitada]="reserva.status === 'R'">
+              
+              @if (reserva.status === 'C') { Confirmada }
+              @else if (reserva.status === 'P') { Pendente }
+              @else if (reserva.status === 'R') { Rejeitada }
+              @else { Cancelada }
+            </span>
+          </div>
+
+          <p><strong>Motivo:</strong> {{ reserva.motivo }}</p>
+          <p class="data">
+            📅 {{ reserva.data_hora_inicio | date:'dd/MM/yyyy HH:mm' }} 
+            até {{ reserva.data_hora_fim | date:'HH:mm' }}
+          </p>
+        </div>
+        
+        <button (click)="cancelar(reserva.id)" class="btn-cancelar">Cancelar</button>
+      </div>
+    }
+  </div>
+</div>

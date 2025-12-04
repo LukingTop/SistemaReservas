@@ -1,0 +1,16 @@
+<h1>Bem-vindo ao Sistema de Reservas de Salas</h1>
+
+<head><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest"></head>
+
+<p>
+    {% if user.is_authenticated %}
+        Olá, {{ user.username }}! | <a href="{% url 'logout' %}">Sair</a>
+        <br><br>
+        <a href="{% url 'reservar_recurso' %}">➡️ Fazer uma Nova Reserva</a>
+    {% else %}
+        Você precisa fazer <a href="{% url 'login' %}">Login</a> para reservar.
+    {% endif %}
+</p>

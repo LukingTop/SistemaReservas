@@ -1,0 +1,21 @@
+.calendar-container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+
+::ng-deep .fc-timegrid-event {
+    min-height: 25px !important;
+}
+
+
+::ng-deep .fc-timegrid-event .fc-event-main {
+    padding: 2px;
+    font-size: 0.85em;
+    overflow: hidden; 
+}

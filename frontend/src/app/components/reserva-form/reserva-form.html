@@ -1,0 +1,40 @@
+<div class="form-container">
+  <h2>Nova Reserva</h2>
+  <p>Reservando o recurso ID: <strong>{{ recursoId }}</strong></p>
+
+  <div *ngIf="mensagemErro" class="error-box">
+    <p>Ocorreu um erro:</p>
+    <pre>{{ mensagemErro }}</pre>
+  </div>
+
+  <form (ngSubmit)="salvarReserva()" #formReserva="ngForm">
+    
+    <div class="form-group">
+      <label>Início:</label>
+      <input type="datetime-local" [(ngModel)]="reserva.data_hora_inicio" name="inicio" required>
+    </div>
+
+    <div class="form-group">
+      <label>Fim:</label>
+      <input type="datetime-local" [(ngModel)]="reserva.data_hora_fim" name="fim" required>
+    </div>
+
+    <div class="form-group">
+      <label>Motivo:</label>
+      <textarea [(ngModel)]="reserva.motivo" name="motivo" rows="3" required placeholder="Ex: Aula de Física"></textarea>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn-confirmar" [disabled]="!formReserva.valid || carregando">
+        @if (carregando) {
+          ⏳ Salvando...
+        } @else {
+          Confirmar Reserva
+        }
+      </button>
+      
+      <a routerLink="/" class="btn-cancelar">Cancelar</a>
+    </div>
+
+  </form>
+</div>
