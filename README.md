@@ -1,7 +1,5 @@
 📅 Sistema de Gerenciamento de Reservas de Salas
 
-Sistema Full Stack desenvolvido para automatizar e centralizar o processo de reserva de recursos limitados (salas de aula, laboratórios, auditórios), eliminando conflitos de agendamento.
-
 Projeto desenvolvido como requisito avaliativo acadêmico.
 
 🚀 Funcionalidades Principais
