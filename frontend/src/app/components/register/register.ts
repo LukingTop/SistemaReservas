@@ -2,7 +2,7 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { ApiService } from '../../services/api';
+import { ApiService } from '../../services/api'; 
 
 @Component({
   selector: 'app-register',
@@ -16,7 +16,8 @@ export class RegisterComponent {
   usuario = {
     username: '',
     email: '',
-    password: ''
+    password: '',
+    admin_code: '' 
   };
 
   mensagemErro: string = '';
@@ -39,7 +40,7 @@ export class RegisterComponent {
         console.error(erro);
         
         if (erro.error) {
-     
+          
           const listaDeErros = Object.values(erro.error).flat();
           this.mensagemErro = listaDeErros.join('\n');
         } else {

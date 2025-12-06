@@ -13,3 +13,28 @@ input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; 
 .btn-login { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
 .btn-login:hover { background: #0056b3; }
 .error-msg { color: red; background: #ffe6e6; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center; }
+
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+
+.btn-login { width: 100%; padding: 12px; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 10px;}
+.error-msg { color: #721c24; background: #f8d7da; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #f5c6cb; }
+
+.code-group {
+  border-top: 1px dashed #ccc;
+  padding-top: 15px;
+  margin-top: 20px;
+}
+
+.code-label {
+  color: #2c3e50;
+}
+
+small {
+  display: block;
+  color: #7f8c8d;
+  font-size: 0.8rem;
+  margin-top: 4px;
+
+}

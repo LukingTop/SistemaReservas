@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core'; 
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -23,7 +23,7 @@ export class LoginComponent {
   constructor(
     private apiService: ApiService, 
     private router: Router,
-    private cd: ChangeDetectorRef 
+    private cd: ChangeDetectorRef
   ) {}
 
   fazerLogin() {
@@ -33,21 +33,21 @@ export class LoginComponent {
       next: (resposta: any) => {
         console.log('Login OK:', resposta);
         
-        localStorage.setItem('token', resposta.token);
+        
+        this.apiService.salvarSessao(resposta.token, resposta.username);
         
         this.router.navigate(['/']);
-        
-        this.cd.detectChanges();
+        this.cd.detectChanges(); 
       },
       error: (erro: any) => {
         console.error('Erro login:', erro);
         
-       
         if (erro.status === 400) {
-             this.mensagemErro = 'Usuário ou senha incorretos.';
+            this.mensagemErro = 'Usuário ou senha inválidos.';
         } else {
-             this.mensagemErro = 'Erro ao conectar com o servidor.';
+            this.mensagemErro = 'Erro ao conectar com o servidor.';
         }
+
         
         this.cd.detectChanges();
       }

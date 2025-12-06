@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { ApiService } from '../../services/api';
 
@@ -14,7 +14,10 @@ export class MinhasReservasComponent implements OnInit {
   reservas: any[] = [];
   carregando: boolean = true;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private cd: ChangeDetectorRef  
+  ) {}
 
   ngOnInit(): void {
     this.carregarDados();
@@ -25,6 +28,9 @@ export class MinhasReservasComponent implements OnInit {
     this.apiService.getMinhasReservas().subscribe({
       next: (dados: any) => {
         this.reservas = dados;
+
+        this.cd.detectChanges();
+        
         this.carregando = false;
       },
       error: (erro: any) => {

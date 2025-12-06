@@ -1,21 +1,51 @@
-<div class="main-layout">
-  <header>
-    <h1>Sistema de Reservas</h1>
+<div class="app-container">
+  
+  <header class="navbar">
+    <div class="navbar-content">
+      
+      <div class="logo">
+        <h1>Sistema de Reservas</h1>
+      </div>
+
+      <nav class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          Lista de Salas
+        </a>
+        
+        <a routerLink="/calendario" routerLinkActive="active">
+          Calendário
+        </a>
+        
+        <a routerLink="/minhas-reservas" routerLinkActive="active">
+          Meus Agendamentos
+        </a>
+
+      
+        <a routerLink="/novo-recurso" class="btn-nav-action" routerLinkActive="active-btn">
+          + Nova Sala
+        </a>
+
+       
+        @if (username) {
+          <span class="user-welcome">
+            Olá, <strong>{{ username }}</strong>
+          </span>
+        }
+
+        <a (click)="sair()" class="logout-link">
+          Sair
+        </a>
+      </nav>
+
+    </div>
   </header>
 
-  <nav>
-  <a routerLink="/" class="nav-link">Lista</a> | 
-  <a routerLink="/novo-recurso" class="nav-link" style="color: #27ae60; font-weight: bold;">+ Sala</a> |
-  <a routerLink="/calendario" class="nav-link">Calendário</a> |
-  <a routerLink="/minhas-reservas" class="nav-link">Minhas Reservas</a> |
-  <a (click)="sair()" class="nav-link" style="cursor: pointer; color: red;">Sair</a>
-</nav>
-  <hr>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
 
-  <router-outlet></router-outlet>
+  <footer class="footer">
+    <p>&copy; 2025 Sistema de Reservas Acadêmicas</p>
+  </footer>
+
 </div>
-
-<style>
-  .main-layout { padding: 20px; font-family: sans-serif; }
-  h1 { color: #333; }
-</style>

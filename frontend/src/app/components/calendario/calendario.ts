@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 1. Import adicionado
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule } from '@fullcalendar/angular'; 
 import { CalendarOptions } from '@fullcalendar/core'; 
@@ -6,6 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { ApiService } from '../../services/api'; 
+import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 
 @Component({
   selector: 'app-calendario',
@@ -19,13 +20,16 @@ export class CalendarioComponent implements OnInit {
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek', 
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+
+     locales: [ptBrLocale],
+     locale: 'pt-br', 
+
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     events: [], 
-    locale: 'pt-br', 
     allDaySlot: false, 
     slotMinTime: '07:00:00',
     slotMaxTime: '23:00:00', 

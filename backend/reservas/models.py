@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+import uuid
+
 
 class Recurso(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -39,11 +41,9 @@ class Reserva(models.Model):
             raise ValidationError("A data/hora de início deve ser anterior à data/hora de fim.")
         
         if self.data_hora_inicio < timezone.now():
-            
             if not self.pk: 
                 raise ValidationError("Não é possível criar uma reserva para um horário no passado.")
 
-        
         conflitos = Reserva.objects.filter(
             recurso=self.recurso,
             status__in=['C', 'P']
@@ -52,7 +52,6 @@ class Reserva(models.Model):
         if self.pk:
             conflitos = conflitos.exclude(pk=self.pk)
 
-        
         conflitos = conflitos.filter(
             data_hora_inicio__lt=self.data_hora_fim, 
             data_hora_fim__gt=self.data_hora_inicio  
@@ -72,3 +71,19 @@ class Reserva(models.Model):
 
     def __str__(self):
         return f"Reserva de {self.recurso.nome} por {self.usuario.username} ({self.data_hora_inicio.date()})"
+
+class CodigoConvite(models.Model):
+    codigo = models.CharField(max_length=50, unique=True, editable=False)
+    usado = models.BooleanField(default=False)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    
+    usado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.codigo:
+            self.codigo = "PROF-" + uuid.uuid4().hex[:8].upper()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        estado = "USADO" if self.usado else "VÁLIDO"
+        return f"{self.codigo} ({estado})"
