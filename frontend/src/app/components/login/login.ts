@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api'; 
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -43,17 +44,30 @@ export class LoginComponent {
         this.router.navigate(['/']);
         this.cd.detectChanges();
       },
+      
       error: (erro: any) => {
         console.error('Erro login:', erro);
         
         if (erro.status === 400) {
             this.mensagemErro = 'Usuário ou senha inválidos.';
+            
+            
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',  
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true
+            });
+            
+            Toast.fire({
+              icon: 'error',
+              title: 'Usuário ou senha incorretos'
+            });
+
         } else {
             this.mensagemErro = 'Erro ao conectar com o servidor.';
         }
-
         this.cd.detectChanges();
-      }
-    });
-  }
-}
+      }});
+  }}

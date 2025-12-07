@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { ApiService } from '../../services/api';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-minhas-reservas',
@@ -41,15 +42,34 @@ export class MinhasReservasComponent implements OnInit {
   }
 
   cancelar(id: number) {
-    if (confirm('Tem certeza que deseja cancelar esta reserva?')) {
-      this.apiService.cancelarReserva(id).subscribe({
-        next: () => {
-          alert('Reserva cancelada!');
-         
-          this.carregarDados();
-        },
-        error: (erro: any) => alert('Erro ao cancelar.')
-      });
-    }
+    
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: "Você não poderá reverter isso!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim, cancelar!',
+      cancelButtonText: 'Manter reserva'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        
+        this.apiService.cancelarReserva(id).subscribe({
+          next: () => {
+            Swal.fire(
+              'Cancelado!',
+              'Sua reserva foi cancelada.',
+              'success'
+            );
+            this.carregarDados();
+          },
+          error: () => {
+            Swal.fire('Erro', 'Não foi possível cancelar.', 'error');
+          }
+        });
+      }
+    });
   }
 }

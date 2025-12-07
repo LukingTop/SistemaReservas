@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api'; 
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reserva-form',
@@ -59,8 +60,15 @@ export class ReservaFormComponent implements OnInit {
       next: (resposta: any) => {
         this.carregando = false;
         
-        alert(this.reserva.eh_manutencao ? 'Bloqueio realizado com sucesso!' : 'Reserva criada com sucesso!');
-        this.router.navigate(['/']); 
+        Swal.fire({
+          title: 'Sucesso!',
+          text: this.reserva.eh_manutencao ? 'Horário bloqueado.' : 'Sua reserva foi realizada com sucesso! Verifique seu e-mail.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#27ae60'
+        }).then(() => {
+          this.router.navigate(['/']); 
+        });
       },
       error: (erro: any) => {
         console.error('Erro:', erro);

@@ -1,16 +1,19 @@
 
+@import 'sweetalert2/dist/sweetalert2.min.css';
+
+
 :root {
  
   --bg-app: #f8f9fa;       
   --bg-card: #ffffff;      
   --text-main: #2c3e50;    
-  --text-secondary: #555555; 
+  --text-secondary: #555555;
   --border-color: #eeeeee;
   --shadow-color: rgba(0, 0, 0, 0.05);
   
   --primary-color: #3498db; 
   --accent-color: #27ae60;  
-  --danger-color: #e74c3c; 
+  --danger-color: #e74c3c;  
 }
 
 
@@ -42,7 +45,24 @@ html, body {
 
 
 input, textarea, select {
-  background-color: var(--bg-card);
+
+  background-color: var(--bg-app); 
   color: var(--text-main);
   border: 1px solid var(--border-color);
+}
+
+
+body.dark-theme .swal2-popup {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .swal2-title {
+  color: var(--text-main) !important;
+}
+
+body.dark-theme .swal2-content, 
+body.dark-theme .swal2-html-container {
+  color: var(--text-secondary) !important;
 }

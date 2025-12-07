@@ -68,7 +68,7 @@ h2 {
 
 .btn-icon:hover {
   opacity: 1;
-  background-color: var(--bg-app); /
+  background-color: var(--bg-app); 
 }
 
 .btn-edit { filter: hue-rotate(45deg); }
