@@ -1,7 +1,7 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'; // 
 import { ApiService } from '../../services/api'; 
 
 @Component({
@@ -11,7 +11,7 @@ import { ApiService } from '../../services/api';
   templateUrl: './recurso-form.html',
   styleUrl: './recurso-form.css'
 })
-export class RecursoFormComponent {
+export class RecursoFormComponent implements OnInit {
 
   recurso = {
     nome: '',
@@ -23,12 +23,43 @@ export class RecursoFormComponent {
 
   carregando: boolean = false;
   mensagemErro: string = '';
+  
+  
+  isEdicao: boolean = false;
+  recursoId: any = null;
 
   constructor(
     private apiService: ApiService,
     private router: Router,
+    private route: ActivatedRoute,
     private cd: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+   
+    this.recursoId = this.route.snapshot.paramMap.get('id');
+
+    if (this.recursoId) {
+      this.isEdicao = true;
+      this.carregarDados(this.recursoId);
+    }
+  }
+
+  carregarDados(id: number) {
+    this.carregando = true;
+    this.apiService.getRecurso(id).subscribe({
+      next: (dados: any) => {
+        this.recurso = dados; 
+        this.carregando = false;
+        this.cd.detectChanges();
+      },
+      error: (erro) => {
+        console.error(erro);
+        alert('Erro ao carregar dados do recurso.');
+        this.router.navigate(['/']); 
+      }
+    });
+  }
 
   salvarRecurso() {
     if (this.carregando) return;
@@ -36,10 +67,18 @@ export class RecursoFormComponent {
     this.carregando = true;
     this.mensagemErro = '';
 
-    this.apiService.criarRecurso(this.recurso).subscribe({
+    
+    let request$;
+    if (this.isEdicao) {
+      request$ = this.apiService.atualizarRecurso(this.recursoId, this.recurso);
+    } else {
+      request$ = this.apiService.criarRecurso(this.recurso);
+    }
+
+    request$.subscribe({
       next: (res: any) => {
-        alert(`Recurso "${res.nome}" criado com sucesso!`);
-        this.carregando = false;
+        const msg = this.isEdicao ? 'Recurso atualizado com sucesso!' : 'Recurso criado com sucesso!';
+        alert(msg);
         this.router.navigate(['/']); 
       },
       error: (erro: any) => {
@@ -47,16 +86,14 @@ export class RecursoFormComponent {
         this.carregando = false;
         
         if (erro.status === 403) {
-          this.mensagemErro = 'Você não tem permissão para criar recursos (Apenas Admins/Staff).';
+          this.mensagemErro = 'Permissão negada. Apenas Admins podem gerenciar recursos.';
         } else if (erro.error) {
-      
           const lista = Object.values(erro.error).flat();
           this.mensagemErro = lista.join('\n');
         } else {
-          this.mensagemErro = 'Erro desconhecido ao salvar recurso.';
+          this.mensagemErro = 'Erro ao salvar.';
         }
         
-      
         this.cd.detectChanges();
       }
     });

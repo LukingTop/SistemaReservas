@@ -8,20 +8,42 @@
   <div class="card-list">
     @for (recurso of recursos; track recurso.id) {
       <div class="card">
-        <h3>{{ recurso.nome }}</h3>
+        
+        <div class="card-header">
+          <h3>{{ recurso.nome }}</h3>
+          
+         
+          @if (ehAdmin) {
+            <div class="admin-actions">
+              <a [routerLink]="['/editar-recurso', recurso.id]" class="btn-icon btn-edit" title="Editar">
+                ✏️
+              </a>
+         
+              <button (click)="excluir(recurso.id, recurso.nome)" class="btn-icon btn-trash" title="Excluir">
+                🗑️
+              </button>
+            </div>
+          }
+        </div>
         
         <div class="card-info">
           <p><strong>Capacidade:</strong> {{ recurso.capacidade_maxima }} pessoas</p>
           <p><strong>Local:</strong> {{ recurso.localizacao }}</p>
+          @if (!recurso.ativo) {
+             <p style="color: red; font-weight: bold;">🔴 INATIVO</p>
+          }
         </div>
 
         @if (recurso.descricao) {
           <p class="descricao">{{ recurso.descricao }}</p>
         }
 
-        <a [routerLink]="['/reservar', recurso.id]" class="btn-reservar">
-          Reservar
-        </a>
+        
+        @if (recurso.ativo) {
+            <a [routerLink]="['/reservar', recurso.id]" class="btn-reservar">Reservar</a>
+        } @else {
+            <button disabled class="btn-reservar btn-disabled">Indisponível</button>
+        }
       </div>
     }
   </div>

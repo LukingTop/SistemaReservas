@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ApiService } from '../../services/api';
+import { ApiService } from '../../services/api'; 
 
 @Component({
   selector: 'app-reserva-form',
@@ -14,14 +14,17 @@ import { ApiService } from '../../services/api';
 export class ReservaFormComponent implements OnInit {
   
   recursoId: any = null;
-  
   carregando: boolean = false;
+  
+  
+  ehAdmin: boolean = false; 
 
   reserva = {
     recurso: null,
     data_hora_inicio: '',
     data_hora_fim: '',
-    motivo: ''
+    motivo: '',
+    eh_manutencao: false 
   };
 
   mensagemErro: string = '';
@@ -36,33 +39,42 @@ export class ReservaFormComponent implements OnInit {
   ngOnInit(): void {
     this.recursoId = this.route.snapshot.paramMap.get('id');
     this.reserva.recurso = this.recursoId;
+
+    
+    this.apiService.isAdmin$.subscribe(isAdmin => {
+      this.ehAdmin = isAdmin;
+    });
   }
 
   salvarReserva() {
     if (this.carregando) return;
-
-    this.carregando = true; 
+    this.carregando = true;
     this.mensagemErro = ''; 
+
+    if (this.reserva.eh_manutencao && !this.reserva.motivo) {
+        this.reserva.motivo = "Bloqueio Administrativo / Manutenção";
+    }
 
     this.apiService.criarReserva(this.reserva).subscribe({
       next: (resposta: any) => {
-        this.carregando = false; 
-        console.log('Sucesso!', resposta);
-        alert('Reserva criada com sucesso!');
+        this.carregando = false;
+        
+        alert(this.reserva.eh_manutencao ? 'Bloqueio realizado com sucesso!' : 'Reserva criada com sucesso!');
         this.router.navigate(['/']); 
       },
       error: (erro: any) => {
         console.error('Erro:', erro);
-        
-        this.carregando = false; 
+        this.carregando = false;
         
         if (erro.error) {
-          const listaDeErros = Object.values(erro.error).flat();
-          this.mensagemErro = listaDeErros.join('\n'); 
+            const lista = Object.values(erro.error).flat();
+            this.mensagemErro = lista.join('\n');
         } else {
-          this.mensagemErro = 'Erro desconhecido ao tentar salvar.';
+            this.mensagemErro = "Erro desconhecido ao tentar salvar.";
         }
+        
         this.cd.detectChanges();
       }
     });
-  }}
+  }
+}

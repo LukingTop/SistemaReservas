@@ -8,6 +8,11 @@
       </div>
 
       <nav class="nav-links">
+        
+        <a (click)="toggleTheme()" class="theme-btn" title="Alternar Tema">
+          @if (isDarkMode) { ☀️ } @else { 🌙 }
+        </a>
+
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           Lista de Salas
         </a>
@@ -20,12 +25,11 @@
           Meus Agendamentos
         </a>
 
-      
+        
         <a routerLink="/novo-recurso" class="btn-nav-action" routerLinkActive="active-btn">
           + Nova Sala
         </a>
 
-       
         @if (username) {
           <span class="user-welcome">
             Olá, <strong>{{ username }}</strong>

@@ -29,6 +29,7 @@ class Reserva(models.Model):
         ('C', 'Confirmada'),
         ('R', 'Rejeitada'),
         ('X', 'Cancelada'),
+        ('M', 'Em Manutenção'),
     ]
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
 
@@ -46,7 +47,7 @@ class Reserva(models.Model):
 
         conflitos = Reserva.objects.filter(
             recurso=self.recurso,
-            status__in=['C', 'P']
+            status__in=['C', 'P', "M"]
         )
         
         if self.pk:
@@ -59,11 +60,13 @@ class Reserva(models.Model):
         
         if conflitos.exists():
             conflito = conflitos.first()
-            raise ValidationError(
-                f"Conflito de agendamento! O recurso já está reservado por "
-                f"{conflito.usuario.username} das {conflito.data_hora_inicio.strftime('%H:%M')} "
-                f"às {conflito.data_hora_fim.strftime('%H:%M')}."
-            )
+            
+            if conflito.status == 'M':
+                msg = f"Este recurso está bloqueado para manutenção das {conflito.data_hora_inicio.strftime('%H:%M')} às {conflito.data_hora_fim.strftime('%H:%M')}."
+            else:
+                msg = f"Conflito! Reservado por {conflito.usuario.username} das {conflito.data_hora_inicio.strftime('%H:%M')} às {conflito.data_hora_fim.strftime('%H:%M')}."
+            
+            raise ValidationError(msg)
 
     def save(self, *args, **kwargs):
         self.full_clean()

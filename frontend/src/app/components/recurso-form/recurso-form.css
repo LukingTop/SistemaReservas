@@ -2,16 +2,17 @@
   max-width: 600px;
   margin: 40px auto;
   padding: 30px;
-  background: white;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px var(--shadow-color);
   font-family: 'Segoe UI', sans-serif;
 }
 
 h2 {
   margin-top: 0;
-  color: #333;
-  border-bottom: 2px solid #27ae60;
+  color: var(--text-main); 
+  border-bottom: 2px solid var(--accent-color); 
   padding-bottom: 10px;
 }
 
@@ -23,19 +24,21 @@ label {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
-  color: #555;
+  color: var(--text-secondary); 
 }
 
 input, textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-app);
+  color: var(--text-main);
   border-radius: 5px;
   font-size: 1rem;
-  box-sizing: border-box; /* Impede que o padding estoure a largura */
+  box-sizing: border-box; 
 }
 
-/* Flexbox para colocar campos lado a lado */
 .row {
   display: flex;
   gap: 15px;
@@ -53,7 +56,7 @@ input, textarea {
 
 .btn-confirmar {
   flex: 2;
-  background-color: #27ae60; /* Verde escuro */
+  background-color: var(--accent-color); 
   color: white;
   border: none;
   padding: 12px;
@@ -64,29 +67,30 @@ input, textarea {
 }
 
 .btn-confirmar:hover {
-  background-color: #219150;
+  filter: brightness(0.9);
 }
 
 .btn-confirmar:disabled {
-  background-color: #95a5a6;
+  background-color: var(--text-secondary); 
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .btn-cancelar {
   flex: 1;
   text-align: center;
   padding: 12px;
-  background-color: #ccc;
-  color: #333;
+  background-color: var(--border-color); 
+  color: var(--text-main); 
   text-decoration: none;
   border-radius: 5px;
 }
 
 .error-box {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: rgba(231, 76, 60, 0.1); 
+  color: var(--danger-color);
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 20px;
-  border: 1px solid #f5c6cb;
+  border: 1px solid var(--danger-color);
 }

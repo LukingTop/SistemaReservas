@@ -5,59 +5,82 @@
   font-family: sans-serif;
 }
 
-h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; color: #333; }
+h2 {
+  border-bottom: 2px solid var(--primary-color); 
+  padding-bottom: 10px;
+  color: var(--text-main); 
+  margin-bottom: 20px;
+}
 
 .item-reserva {
-  background: white;
-  border: 1px solid #ddd;
-  padding: 15px;
+  background: var(--bg-card); 
+  border: 1px solid var(--border-color); 
+  padding: 20px;
   margin-bottom: 15px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px var(--shadow-color); 
+  transition: transform 0.2s;
 }
 
-.info h3 { margin: 0 0 5px 0; color: #2980b9; }
-.info p { margin: 3px 0; color: #555; }
+.item-reserva:hover {
+  transform: translateX(5px);
+  border-color: var(--primary-color);
+}
+
+.header-reserva {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.header-reserva h3 {
+  margin: 0;
+  color: var(--primary-color); 
+  font-size: 1.2rem;
+}
+
+.info p { margin: 3px 0; color: var(--text-secondary); } 
+
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  background-color: var(--text-secondary); 
+}
+
+.status-badge.confirmada { background-color: var(--accent-color); } 
+.status-badge.pendente { background-color: #f39c12; }   
+.status-badge.rejeitada { background-color: var(--danger-color); }  
+
+.motivo { margin: 5px 0; color: var(--text-secondary); } 
+.data { margin: 5px 0; color: var(--text-secondary); font-size: 0.9rem; }
 
 .btn-cancelar {
-  background-color: #e74c3c;
+  background-color: var(--danger-color); 
   color: white;
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  transition: background 0.2s;
 }
 
-.btn-cancelar:hover { background-color: #c0392b; }
-.empty { text-align: center; color: #777; margin-top: 20px; }
-
-
-.header-reserva {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 5px;
+.btn-cancelar:hover { 
+  filter: brightness(0.9); 
 }
 
-.header-reserva h3 {
-  margin: 0;
+.empty-state { 
+  text-align: center; 
+  color: var(--text-secondary);
+  margin-top: 40px; 
+  font-style: italic; 
 }
-
-.status-badge {
-  font-size: 0.8rem;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: white;
-  background-color: #95a5a6; 
-}
-
-
-.status-badge.confirmada { background-color: #27ae60; } 
-.status-badge.pendente { background-color: #f39c12; }   
-.status-badge.rejeitada { background-color: #c0392b; } 

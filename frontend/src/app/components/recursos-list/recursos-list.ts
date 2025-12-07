@@ -13,27 +13,45 @@ import { RouterLink } from '@angular/router';
 export class RecursosListComponent implements OnInit {
   
   recursos: any[] = [];
+  ehAdmin: boolean = false; // 🌟 Controle de permissão
 
   constructor(
-      private apiService: ApiService,
-      private cd: ChangeDetectorRef
+    private apiService: ApiService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.carregarRecursos();
+    
+  
+    this.apiService.isAdmin$.subscribe(isAdmin => {
+      this.ehAdmin = isAdmin;
+    });
   }
 
   carregarRecursos() {
     this.apiService.getRecursos().subscribe({
       next: (dados: any) => {
-        console.log('Dados recebidos:', dados);
         this.recursos = dados;
-
-         this.cd.detectChanges();
+        this.cd.detectChanges();
       },
-      error: (erro: any) => {
-        console.error('Erro:', erro);
-      }
+      error: (erro: any) => console.error('Erro:', erro)
     });
+  }
+
+  
+  excluir(id: number, nome: string) {
+    if (confirm(`Tem certeza que deseja excluir o recurso "${nome}"? Isso apagará todas as reservas associadas a ele.`)) {
+      this.apiService.excluirRecurso(id).subscribe({
+        next: () => {
+          alert('Recurso excluído com sucesso!');
+          this.carregarRecursos(); 
+        },
+        error: (erro) => {
+          console.error(erro);
+          alert('Erro ao excluir. Verifique se você tem permissão.');
+        }
+      });
+    }
   }
 }

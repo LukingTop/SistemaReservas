@@ -2,10 +2,13 @@
   <h2>Nova Reserva</h2>
   <p>Reservando o recurso ID: <strong>{{ recursoId }}</strong></p>
 
-  <div *ngIf="mensagemErro" class="error-box">
-    <p>Ocorreu um erro:</p>
-    <pre>{{ mensagemErro }}</pre>
-  </div>
+  
+  @if (mensagemErro) {
+    <div class="error-box">
+      <p>Ocorreu um erro:</p>
+      <pre>{{ mensagemErro }}</pre>
+    </div>
+  }
 
   <form (ngSubmit)="salvarReserva()" #formReserva="ngForm">
     
@@ -21,8 +24,19 @@
 
     <div class="form-group">
       <label>Motivo:</label>
-      <textarea [(ngModel)]="reserva.motivo" name="motivo" rows="3" required placeholder="Ex: Aula de Física"></textarea>
+     
+      <textarea [(ngModel)]="reserva.motivo" name="motivo" rows="3" [required]="!reserva.eh_manutencao" placeholder="Ex: Aula de Física"></textarea>
     </div>
+
+ 
+    @if (ehAdmin) {
+      <div class="admin-panel">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="reserva.eh_manutencao" name="manutencao">
+          🛑 Bloquear horário para Manutenção
+        </label>
+      </div>
+    }
 
     <div class="actions">
       <button type="submit" class="btn-confirmar" [disabled]="!formReserva.valid || carregando">

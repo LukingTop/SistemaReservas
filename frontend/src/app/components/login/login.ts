@@ -34,10 +34,14 @@ export class LoginComponent {
         console.log('Login OK:', resposta);
         
         
-        this.apiService.salvarSessao(resposta.token, resposta.username);
+        this.apiService.salvarSessao(
+          resposta.token, 
+          resposta.username, 
+          resposta.is_staff
+        );
         
         this.router.navigate(['/']);
-        this.cd.detectChanges(); 
+        this.cd.detectChanges();
       },
       error: (erro: any) => {
         console.error('Erro login:', erro);
@@ -48,7 +52,6 @@ export class LoginComponent {
             this.mensagemErro = 'Erro ao conectar com o servidor.';
         }
 
-        
         this.cd.detectChanges();
       }
     });

@@ -6,7 +6,6 @@ import { RegisterComponent } from './components/register/register';
 import { CalendarioComponent } from './components/calendario/calendario';
 import { MinhasReservasComponent } from './components/minhas-reservas/minhas-reservas';
 import { RecursoFormComponent } from './components/recurso-form/recurso-form';
-
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -15,24 +14,32 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   
-  {
-    path: 'reservar/:id',
+  
+  { 
+    path: 'reservar/:id', 
     component: ReservaFormComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard] 
   },
-  {
-    path: 'calendario',
+  { 
+    path: 'calendario', 
     component: CalendarioComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard] 
   },
-  {
-    path: 'minhas-reservas',
+  { 
+    path: 'minhas-reservas', 
     component: MinhasReservasComponent,
-    canActivate: [authGuard]
-  }, 
-  {
-    path: 'novo-recurso',
-    component: RecursoFormComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard] 
+  },
+  
+  
+  { 
+    path: 'novo-recurso', 
+    component: RecursoFormComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'editar-recurso/:id',  
+    component: RecursoFormComponent, 
+    canActivate: [authGuard] 
   }
 ];
