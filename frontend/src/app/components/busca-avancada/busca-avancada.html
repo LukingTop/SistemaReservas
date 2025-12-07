@@ -1,0 +1,55 @@
+<div class="container">
+  <h2>🔍 Encontrar Sala Disponível</h2>
+  <p class="subtitle">Informe o horário e a capacidade para ver apenas o que está livre.</p>
+
+  <div class="filtros-box">
+    <div class="grupo-input">
+      <label>Início Desejado:</label>
+      <input type="datetime-local" [(ngModel)]="filtro.inicio">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Fim Desejado:</label>
+      <input type="datetime-local" [(ngModel)]="filtro.fim">
+    </div>
+
+    <div class="grupo-input small">
+      <label>Pessoas:</label>
+      <input type="number" [(ngModel)]="filtro.capacidade" min="1">
+    </div>
+
+    <button (click)="pesquisar()" class="btn-buscar" [disabled]="carregando">
+      @if (carregando) { ⏳ } @else { Buscar }
+    </button>
+  </div>
+
+  <hr>
+
+ 
+  @if (carregando) {
+    <p class="loading">Procurando salas livres...</p>
+  }
+
+  @if (!carregando && buscou && resultados.length === 0) {
+    <div class="sem-resultado">
+      <p>😕 Nenhuma sala livre encontrada para este horário e capacidade.</p>
+    </div>
+  }
+
+ 
+  <div class="lista-resultados">
+    @for (sala of resultados; track sala.id) {
+      <div class="card-resultado">
+        <div class="info">
+          <h3>{{ sala.nome }}</h3>
+          <p><strong>Capacidade:</strong> {{ sala.capacidade_maxima }} • <strong>Local:</strong> {{ sala.localizacao }}</p>
+        </div>
+        
+        
+        <a [routerLink]="['/reservar', sala.id]" class="btn-reservar-agora">
+          Reservar Agora
+        </a>
+      </div>
+    }
+  </div>
+</div>

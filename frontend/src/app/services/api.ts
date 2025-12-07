@@ -13,32 +13,30 @@ export class ApiService {
   private usuarioSubject = new BehaviorSubject<string | null>(localStorage.getItem('username'));
   public usuario$ = this.usuarioSubject.asObservable();
 
-
   private isAdminSubject = new BehaviorSubject<boolean>(localStorage.getItem('is_staff') === 'true');
   public isAdmin$ = this.isAdminSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
   
+
   login(credenciais: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/reservas/api-token-auth/`, credenciais);
   }
 
-  
   salvarSessao(token: string, username: string, is_staff: boolean) {
     localStorage.setItem('token', token);
     localStorage.setItem('username', username);
-    localStorage.setItem('is_staff', String(is_staff)); 
+    localStorage.setItem('is_staff', String(is_staff));
     
     this.usuarioSubject.next(username);
-    this.isAdminSubject.next(is_staff); 
+    this.isAdminSubject.next(is_staff);
   }
 
- 
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
-    localStorage.removeItem('is_staff'); 
+    localStorage.removeItem('is_staff');
     
     this.usuarioSubject.next(null);
     this.isAdminSubject.next(false);
@@ -59,13 +57,11 @@ export class ApiService {
 
 
 
-
-
   getRecursos(): Observable<any> {
     return this.http.get(`${this.apiUrl}/reservas/api/recursos/`, { headers: this.getAuthHeaders() });
   }
 
-   getRecurso(id: number): Observable<any> {
+  getRecurso(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/reservas/api/recursos/${id}/`, { headers: this.getAuthHeaders() });
   }
 
@@ -80,6 +76,13 @@ export class ApiService {
   excluirRecurso(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/reservas/api/recursos/${id}/`, { headers: this.getAuthHeaders() });
   }
+
+  buscarRecursosDisponiveis(inicio: string, fim: string, capacidade: number): Observable<any> {
+    const params = `?inicio=${inicio}&fim=${fim}&capacidade=${capacidade}`;
+    return this.http.get(`${this.apiUrl}/reservas/api/recursos/buscar_disponiveis/${params}`, { headers: this.getAuthHeaders() });
+  }
+
+
 
   getReservas(): Observable<any> {
     return this.http.get(`${this.apiUrl}/reservas/api/reservas/`, { headers: this.getAuthHeaders() });
@@ -97,6 +100,18 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/reservas/api/reservas/${id}/`, { headers: this.getAuthHeaders() });
   }
 
-  
-}
 
+  baixarPDF(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/reservas/api/reservas/relatorio_pdf/`, { 
+      headers: this.getAuthHeaders(),
+      responseType: 'blob' 
+    });
+  }
+
+  baixarExcel(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/reservas/api/reservas/relatorio_excel/`, { 
+      headers: this.getAuthHeaders(),
+      responseType: 'blob' 
+    });
+  }
+}

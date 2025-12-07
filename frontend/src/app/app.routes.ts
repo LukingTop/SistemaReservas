@@ -7,12 +7,16 @@ import { CalendarioComponent } from './components/calendario/calendario';
 import { MinhasReservasComponent } from './components/minhas-reservas/minhas-reservas';
 import { RecursoFormComponent } from './components/recurso-form/recurso-form';
 import { authGuard } from './guards/auth-guard';
+import { BuscaAvancadaComponent } from './components/busca-avancada/busca-avancada';
+import { RelatoriosComponent } from './components/relatorios/relatorios';
 
 export const routes: Routes = [
   
   { path: '', component: RecursosListComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'busca', component: BuscaAvancadaComponent, canActivate: [authGuard] },
+  { path: 'relatorios', component: RelatoriosComponent, canActivate: [authGuard] },
   
   
   { 

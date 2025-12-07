@@ -1,0 +1,52 @@
+.container { max-width: 900px; margin: 30px auto; padding: 20px; }
+
+h2 { color: var(--text-main); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+p { color: var(--text-secondary); }
+
+.cards-container {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.report-card {
+  flex: 1;
+  min-width: 250px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 4px 10px var(--shadow-color);
+  transition: transform 0.2s;
+}
+.report-card:hover { transform: translateY(-5px); }
+
+.icon { font-size: 3rem; margin-bottom: 15px; }
+
+.btn-pdf {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+  width: 100%;
+}
+.btn-pdf:hover { background-color: #c0392b; }
+
+.btn-excel {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+  width: 100%;
+}
+.btn-excel:hover { background-color: #219150; }

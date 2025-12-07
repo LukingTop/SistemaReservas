@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>📄 Central de Relatórios</h2>
+  <p>Exporte os dados das reservas para análise ou impressão.</p>
+
+  <div class="cards-container">
+    
+   
+    <div class="report-card pdf-card">
+      <div class="icon">📄</div>
+      <h3>Relatório em PDF</h3>
+      <p>Ideal para impressão e documentos oficiais.</p>
+      <button (click)="downloadArquivo('pdf')" class="btn-pdf">Baixar PDF</button>
+    </div>
+
+   
+    <div class="report-card excel-card">
+      <div class="icon">📊</div>
+      <h3>Planilha Excel</h3>
+      <p>Ideal para análise de dados e estatísticas.</p>
+      <button (click)="downloadArquivo('excel')" class="btn-excel">Baixar Excel</button>
+    </div>
+
+  </div>
+</div>
