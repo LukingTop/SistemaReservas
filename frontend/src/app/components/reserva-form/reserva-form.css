@@ -1,40 +1,59 @@
 .form-container {
-  max-width: 500px;
+  max-width: 600px;
   margin: 40px auto;
   padding: 30px;
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   box-shadow: 0 4px 15px var(--shadow-color);
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-h2 { 
-  margin-top: 0; 
+h2 {
+  margin-top: 0;
   color: var(--text-main); 
+  border-bottom: 2px solid var(--accent-color); 
+  padding-bottom: 10px;
 }
 
-.form-group { margin-bottom: 20px; }
+.form-group {
+  margin-bottom: 20px;
+}
 
-label { 
-  display: block; 
-  margin-bottom: 8px; 
-  font-weight: bold; 
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
   color: var(--text-secondary); 
 }
 
 input, textarea {
   width: 100%;
   padding: 10px;
+  
   border: 1px solid var(--border-color);
   background-color: var(--bg-app);
   color: var(--text-main);
   border-radius: 5px;
   font-size: 1rem;
-  box-sizing: border-box;
+  box-sizing: border-box; 
 }
 
-.actions { display: flex; gap: 10px; margin-top: 30px; }
+
+.row {
+  display: flex;
+  gap: 15px;
+}
+
+.half {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
 
 .btn-confirmar {
   flex: 2;
@@ -45,14 +64,15 @@ input, textarea {
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.btn-confirmar:hover { 
-  filter: brightness(0.9); 
+.btn-confirmar:hover {
+  filter: brightness(0.9);
 }
 
 .btn-confirmar:disabled {
-  background-color: var(--text-secondary);
+  background-color: var(--text-secondary); 
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -81,9 +101,9 @@ input, textarea {
 .admin-panel {
   margin-top: 15px;
   padding: 15px;
-  
-  background-color: rgba(241, 196, 15, 0.1); 
-  border: 1px solid rgba(241, 196, 15, 0.3);
+ 
+  background-color: rgba(241, 196, 15, 0.15); 
+  border: 1px solid rgba(241, 196, 15, 0.4);
   border-radius: 5px;
 }
 
@@ -101,4 +121,10 @@ input[type="checkbox"] {
   height: 20px;
   cursor: pointer;
   accent-color: #f1c40f;
+}
+
+
+:host-context(body.dark-theme) input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }

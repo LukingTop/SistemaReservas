@@ -12,19 +12,18 @@ h2 {
 }
 
 .subtitle {
-  color: var(--text-secondary);
+  color: var(--text-secondary); 
   margin-bottom: 25px;
   font-size: 0.95rem;
 }
 
-
 .filtros-box {
   display: flex;
   gap: 15px;
-  background: var(--bg-card);
+  background: var(--bg-card); 
   padding: 25px;
   border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color); 
   box-shadow: 0 2px 8px var(--shadow-color);
   align-items: flex-end; 
   flex-wrap: wrap;
@@ -36,7 +35,7 @@ h2 {
 .grupo-input label { 
   display: block; 
   margin-bottom: 8px; 
-  color: var(--text-secondary); 
+  color: var(--text-secondary);
   font-weight: bold; 
   font-size: 0.9rem;
 }
@@ -68,7 +67,7 @@ h2 {
 
 hr {
   border: 0;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color); 
   margin: 30px 0;
 }
 
@@ -80,14 +79,14 @@ hr {
 }
 
 .card-resultado {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: var(--bg-card); 
+  border: 1px solid var(--border-color); 
   padding: 20px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-left: 5px solid var(--accent-color); 
+  border-left: 5px solid var(--accent-color);
   box-shadow: 0 2px 5px var(--shadow-color);
   transition: transform 0.2s;
 }
@@ -95,7 +94,7 @@ hr {
 .card-resultado:hover { transform: translateX(5px); }
 
 .card-resultado h3 { margin: 0 0 5px 0; color: var(--text-main); }
-.card-resultado p { margin: 0; color: var(--text-secondary); }
+.card-resultado p { margin: 0; color: var(--text-secondary); } 
 
 .btn-reservar-agora {
   background-color: var(--accent-color);
@@ -113,4 +112,10 @@ hr {
   margin-top: 30px; 
   color: var(--text-secondary); 
   font-size: 1.1rem;
+}
+
+
+:host-context(body.dark-theme) input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }

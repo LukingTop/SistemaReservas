@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: reserva-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app 
+    environment:
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY} 
+    
+    command: >
+      sh -c "python manage.py migrate &&
+             daphne -b 0.0.0.0 -p 8000 reserva_salas.asgi:application"
+
+  frontend:
+    build: ./frontend
+    container_name: reserva-frontend
+    ports:
+      - "4200:80" 
+    depends_on:
+      - backend
