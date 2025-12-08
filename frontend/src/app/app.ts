@@ -14,6 +14,7 @@ import { NotificationService } from './services/notification';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'reserva-frontend';
   username: string | null = null;
+  isAdmin: boolean = false; 
   isDarkMode: boolean = false;
 
   constructor(
@@ -23,15 +24,20 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    
     this.apiService.usuario$.subscribe(nome => {
       this.username = nome;
-      
       
       if (nome) {
         this.notificationService.connect();
       } else {
         this.notificationService.close();
       }
+    });
+
+    
+    this.apiService.isAdmin$.subscribe(status => {
+      this.isAdmin = status;
     });
 
     
@@ -54,7 +60,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  
   ngOnDestroy() {
     this.notificationService.close(); 
   }

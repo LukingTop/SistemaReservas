@@ -8,7 +8,7 @@
       </div>
 
       <nav class="nav-links">
-    
+        
         <a (click)="toggleTheme()" class="theme-btn" title="Alternar Tema">
           @if (isDarkMode) { ☀️ } @else { 🌙 }
         </a>
@@ -16,20 +16,23 @@
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           Lista
         </a>
-        
-        <a routerLink="/calendario" routerLinkActive="active">
-          Calendário
-        </a>
 
         <a routerLink="/busca" routerLinkActive="active">
           Buscar
         </a>
         
-        <a routerLink="/novo-recurso" class="btn-nav-action" routerLinkActive="active-btn">
-          + Sala
+        <a routerLink="/calendario" routerLinkActive="active">
+          Calendário
         </a>
-
+        
        
+        @if (isAdmin) {
+          <a routerLink="/novo-recurso" class="btn-nav-action" routerLinkActive="active-btn">
+            + Sala
+          </a>
+        }
+
+      
         @if (username) {
           <div class="user-dropdown">
             <button class="dropdown-trigger">
@@ -44,7 +47,6 @@
             </div>
           </div>
         } @else {
-           
             <a routerLink="/login">Login</a>
         }
 

@@ -13,4 +13,5 @@ urlpatterns = [
     path('api-token-auth/', csrf_exempt(CustomAuthToken.as_view()), name='api_token_auth'),
     path('api/register/', RegisterView.as_view(), name='auth_register'),
     path('admin/', admin_site.urls), 
+    path('reservas/api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]

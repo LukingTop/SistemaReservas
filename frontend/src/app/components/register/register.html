@@ -1,38 +1,51 @@
-<div class="login-container"> <h2>Criar Conta</h2>
+<div class="login-container">
+  <h2>Criar Conta</h2>
 
   @if (mensagemErro) {
     <div class="error-msg">
-      {{ mensagemErro }}
+      <pre>{{ mensagemErro }}</pre>
     </div>
   }
 
-  <form (ngSubmit)="fazerCadastro()">
+  <form (ngSubmit)="fazerCadastro()" #formCadastro="ngForm">
+    
     <div class="form-group">
       <label>Usuário:</label>
-      <input type="text" [(ngModel)]="usuario.username" name="username" required>
+      <input type="text" [(ngModel)]="usuario.username" name="username" required placeholder="Escolha um nome de usuário" (ngModelChange)="verificarValidade()">
     </div>
 
     <div class="form-group">
       <label>Email:</label>
-      <input type="email" [(ngModel)]="usuario.email" name="email" required>
+      <input type="email" [(ngModel)]="usuario.email" name="email" required email placeholder="seu@email.com" (ngModelChange)="verificarValidade()">
+      
+    
+      @if (formCadastro.controls['email']?.invalid && (formCadastro.controls['email']?.dirty || formCadastro.controls['email']?.touched)) {
+        <small style="color: var(--danger-color);">Informe um e-mail válido.</small>
+      }
     </div>
 
     <div class="form-group">
       <label>Senha:</label>
-      <input type="password" [(ngModel)]="usuario.password" name="password" required>
+      <input type="password" [(ngModel)]="usuario.password" name="password" required minlength="8" placeholder="Mínimo 8 caracteres" (ngModelChange)="verificarValidade()">
+      
+     
+      @if (formCadastro.controls['password']?.errors?.['minlength'] && (formCadastro.controls['password']?.dirty || formCadastro.controls['password']?.touched)) {
+        <small style="color: var(--danger-color);">A senha deve ter pelo menos 8 caracteres.</small>
+      }
     </div>
 
-    <div class="form-group code-group">
+    <div class="code-group">
       <label class="code-label">Código de Professor (Opcional):</label>
       <input type="text" [(ngModel)]="usuario.admin_code" name="admin_code" placeholder="Cole o código de convite aqui">
       <small>Preencha apenas se você for docente/administrador.</small>
     </div>
 
-
-    <button type="submit" class="btn-login" style="background-color: #28a745;">Cadastrar</button>
+    
+    <button type="submit" class="btn-login" [disabled]="!formCadastro.valid">Cadastrar</button>
     
     <div style="margin-top: 15px; text-align: center;">
       <a routerLink="/login">Já tem conta? Faça Login</a>
     </div>
+
   </form>
 </div>

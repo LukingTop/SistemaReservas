@@ -1,0 +1,22 @@
+<div class="login-container"> 
+  <h2>Recuperar Senha</h2>
+  
+  <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+    Digite seu e-mail cadastrado. Enviaremos um link para você criar uma nova senha.
+  </p>
+
+  <form (ngSubmit)="enviar()" #formEsqueci="ngForm">
+    <div class="form-group">
+      <label>E-mail:</label>
+      <input type="email" [(ngModel)]="email" name="email" required placeholder="seu@email.com">
+    </div>
+
+    <button type="submit" class="btn-login" [disabled]="carregando || !formEsqueci.valid">
+      @if (carregando) { ⏳ Enviando... } @else { Enviar Link }
+    </button>
+    
+    <div style="margin-top: 15px; text-align: center;">
+      <a routerLink="/login">Voltar para Login</a>
+    </div>
+  </form>
+</div>

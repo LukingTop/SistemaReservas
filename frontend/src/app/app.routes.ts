@@ -9,6 +9,8 @@ import { RecursoFormComponent } from './components/recurso-form/recurso-form';
 import { authGuard } from './guards/auth-guard';
 import { BuscaAvancadaComponent } from './components/busca-avancada/busca-avancada';
 import { RelatoriosComponent } from './components/relatorios/relatorios';
+import { EsqueciSenhaComponent } from './components/esqueci-senha/esqueci-senha';
+import { NovaSenhaComponent } from './components/nova-senha/nova-senha';
 
 export const routes: Routes = [
   
@@ -17,6 +19,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'busca', component: BuscaAvancadaComponent, canActivate: [authGuard] },
   { path: 'relatorios', component: RelatoriosComponent, canActivate: [authGuard] },
+  { path: 'esqueci-senha', component: EsqueciSenhaComponent },
+  { path: 'nova-senha', component: NovaSenhaComponent },
   
   
   { 

@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import uuid
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail
 
 class Recurso(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -93,3 +97,27 @@ class CodigoConvite(models.Model):
     def __str__(self):
         estado = "USADO" if self.usado else "VÁLIDO"
         return f"{self.codigo} ({estado})"
+    
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+   
+    link = f"http://localhost:4200/nova-senha?token={reset_password_token.key}"
+
+    email_mensagem = f"""
+    Olá, {reset_password_token.user.username}!
+    
+    Recebemos um pedido para redefinir a senha da sua conta.
+    
+    Clique no link abaixo para criar uma nova senha:
+    {link}
+    
+    Se você não pediu isso, ignore este e-mail.
+    """
+
+    send_mail(
+        subject="Redefinição de Senha - Sistema de Reservas",
+        message=email_mensagem,
+        from_email=None, 
+        recipient_list=[reset_password_token.user.email]
+    )

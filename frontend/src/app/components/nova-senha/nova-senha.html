@@ -1,0 +1,17 @@
+<div class="login-container">
+  <h2>Definir Nova Senha</h2>
+  <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+    Escolha uma senha forte para sua conta.
+  </p>
+
+  <form (ngSubmit)="salvarSenha()" #formNova="ngForm">
+    <div class="form-group">
+      <label>Nova Senha:</label>
+      <input type="password" [(ngModel)]="senha" name="senha" required minlength="8" placeholder="Mínimo 8 caracteres">
+    </div>
+
+    <button type="submit" class="btn-login" [disabled]="carregando || !formNova.valid">
+      @if (carregando) { ⏳ Salvando... } @else { Alterar Senha }
+    </button>
+  </form>
+</div>

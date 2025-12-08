@@ -1,6 +1,6 @@
 import os
 from django.conf import settings
-from django.conf.urls.static import static 
+from django.conf.urls.static import static
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from django.views.decorators.csrf import csrf_exempt
@@ -25,7 +25,7 @@ except:
     pass
 
 urlpatterns = [
-    
+   
     path('reservas/api/', include(router.urls)),
     
     
@@ -34,7 +34,10 @@ urlpatterns = [
     
     path('reservas/api/register/', RegisterView.as_view(), name='auth_register'),
     
- 
+    
+    path('reservas/api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    
+   
     path('admin/', admin_site.urls), 
 ]
 

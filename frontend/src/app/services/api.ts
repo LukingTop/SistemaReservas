@@ -100,7 +100,17 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/reservas/api/reservas/${id}/`, { headers: this.getAuthHeaders() });
   }
 
+    esqueciSenha(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reservas/api/password_reset/`, { email });
+  }
 
+  
+    confirmarNovaSenha(dados: any): Observable<any> {
+    
+    return this.http.post(`${this.apiUrl}/reservas/api/password_reset/confirm/`, dados);
+  }
+
+  
   baixarPDF(): Observable<any> {
     return this.http.get(`${this.apiUrl}/reservas/api/reservas/relatorio_pdf/`, { 
       headers: this.getAuthHeaders(),
@@ -112,6 +122,8 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/reservas/api/reservas/relatorio_excel/`, { 
       headers: this.getAuthHeaders(),
       responseType: 'blob' 
+
+      
     });
   }
 }

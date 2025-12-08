@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api'; 
+import Swal from 'sweetalert2'; 
 
 @Component({
   selector: 'app-register',
@@ -25,22 +26,33 @@ export class RegisterComponent {
   constructor(
     private apiService: ApiService, 
     private router: Router,
-    private cd: ChangeDetectorRef 
+    public cd: ChangeDetectorRef 
   ) {}
+
+  verificarValidade() {
+    this.cd.detectChanges();
+  }
 
   fazerCadastro() {
     this.mensagemErro = ''; 
 
     this.apiService.register(this.usuario).subscribe({
       next: (res: any) => {
-        alert('Cadastro realizado com sucesso! Faça login.');
-        this.router.navigate(['/login']);
+       
+        Swal.fire({
+          title: 'Cadastro Realizado!',
+          text: 'Sua conta foi criada com sucesso. Faça login para continuar.',
+          icon: 'success',
+          confirmButtonText: 'Ir para Login',
+          confirmButtonColor: '#27ae60'
+        }).then(() => {
+          this.router.navigate(['/login']);
+        });
       },
       error: (erro: any) => {
         console.error(erro);
         
         if (erro.error) {
-          
           const listaDeErros = Object.values(erro.error).flat();
           this.mensagemErro = listaDeErros.join('\n');
         } else {
