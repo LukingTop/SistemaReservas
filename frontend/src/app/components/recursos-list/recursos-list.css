@@ -6,7 +6,7 @@
 
 h2 {
   color: var(--text-main); 
-  border-bottom: 2px solid var(--primary-color); 
+  border-bottom: 2px solid var(--primary-color);
   padding-bottom: 10px;
   margin-bottom: 30px;
 }
@@ -20,8 +20,9 @@ h2 {
 .card {
   background: var(--bg-card); 
   border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 6px var(--shadow-color); 
+  
+  padding: 0; 
+  box-shadow: 0 4px 6px var(--shadow-color);
   border: 1px solid var(--border-color); 
   transition: transform 0.2s;
   display: flex;
@@ -35,7 +36,41 @@ h2 {
   border-color: var(--primary-color);
 }
 
+
+.card-img-container {
+  width: 100%;
+  height: 180px; 
+  background-color: var(--border-color);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  display: block;
+}
+
+.card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  background-color: var(--bg-app); 
+}
+
+
+.card-header, .card-info, .descricao {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .card-header {
+  margin-top: 15px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -45,8 +80,8 @@ h2 {
   margin-top: 0;
   color: var(--primary-color); 
   margin-right: 10px;
+  font-size: 1.3rem;
 }
-
 
 .admin-actions {
   display: flex;
@@ -69,10 +104,11 @@ h2 {
 .btn-icon:hover {
   opacity: 1;
   background-color: var(--bg-app); 
+  transform: scale(1.1);
 }
 
 .btn-edit { filter: hue-rotate(45deg); }
-.btn-trash { color: var(--danger-color); }
+.btn-trash { color: var(--danger-color); } 
 
 .card-info p { 
   margin: 5px 0; 
@@ -89,6 +125,7 @@ h2 {
   margin-bottom: 15px; 
 }
 
+
 .btn-reservar {
   background-color: var(--primary-color); 
   color: white;
@@ -96,14 +133,12 @@ h2 {
   text-decoration: none;
   font-weight: bold;
   padding: 15px;
-  width: calc(100% + 40px); 
-  margin-left: -20px;
-  margin-right: -20px;
-  margin-bottom: -20px;
+  width: 100%;
   margin-top: auto; 
   transition: background 0.2s;
-  border-radius: 0 0 10px 10px;
   border: none;
+  border-radius: 0; 
+  cursor: pointer;
 }
 
 .btn-reservar:hover { 
@@ -111,7 +146,14 @@ h2 {
 }
 
 .btn-disabled {
-    background-color: var(--text-secondary);
+    background-color: var(--text-secondary); 
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.empty-message {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    margin-top: 20px;
 }

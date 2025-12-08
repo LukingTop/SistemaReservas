@@ -10,13 +10,13 @@ from django.core.mail import send_mail
 from django.db.models import Q
 from .models import Recurso, Reserva, CodigoConvite
 from .serializers import RecursoSerializer, ReservaSerializer, UserSerializer
-
-
 import openpyxl
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 import datetime
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 
 class RecursoViewSet(viewsets.ModelViewSet):
@@ -65,8 +65,10 @@ class ReservaViewSet(viewsets.ModelViewSet):
             else:
                 novo_status = 'C'
         
+        
         reserva = serializer.save(usuario=user, status=novo_status)
         
+       
         if novo_status != 'M' and user.email:
             assunto = 'Confirmação de Reserva'
             mensagem = f"""
@@ -76,7 +78,26 @@ class ReservaViewSet(viewsets.ModelViewSet):
             Início: {reserva.data_hora_inicio}
             Status: {reserva.get_status_display()}
             """
-            send_mail(subject=assunto, message=mensagem, from_email=None, recipient_list=[user.email], fail_silently=False)
+            
+            try:
+                send_mail(subject=assunto, message=mensagem, from_email=None, recipient_list=[user.email], fail_silently=True)
+            except Exception as e:
+                print(f"Erro ao enviar e-mail: {e}")
+
+       
+        try:
+            channel_layer = get_channel_layer()
+            mensagem_ws = f"Nova reserva: {reserva.recurso.nome} por {user.username} ({reserva.get_status_display()})"
+            
+            async_to_sync(channel_layer.group_send)(
+                "admin_reservas", 
+                {
+                    "type": "enviar_notificacao", 
+                    "message": mensagem_ws
+                }
+            )
+        except Exception as e:
+            print(f"Erro ao enviar WebSocket: {e}")
 
     @action(detail=False, methods=['get'])
     def meus_agendamentos(self, request):
@@ -91,11 +112,8 @@ class ReservaViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="reservas_relatorio.pdf"'
 
         p = canvas.Canvas(response, pagesize=A4)
-        
-       
         p.setFont("Helvetica-Bold", 16)
         p.drawString(100, 800, "Relatório Geral de Reservas")
-        
         
         p.setFont("Helvetica-Bold", 10)
         y = 750
@@ -104,7 +122,6 @@ class ReservaViewSet(viewsets.ModelViewSet):
         p.drawString(200, y, "Usuário")
         p.drawString(300, y, "Início")
         p.drawString(450, y, "Status")
-        
         p.line(50, y-5, 550, y-5)
         y -= 25
 
@@ -132,7 +149,6 @@ class ReservaViewSet(viewsets.ModelViewSet):
         p.save()
         return response
 
-    
     @action(detail=False, methods=['get'])
     def relatorio_excel(self, request):
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

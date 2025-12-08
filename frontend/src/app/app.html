@@ -8,41 +8,46 @@
       </div>
 
       <nav class="nav-links">
-        
+    
         <a (click)="toggleTheme()" class="theme-btn" title="Alternar Tema">
           @if (isDarkMode) { ☀️ } @else { 🌙 }
         </a>
 
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          Lista de Salas
+          Lista
         </a>
-
-        <a routerLink="/busca">🔍 Buscar</a>
         
         <a routerLink="/calendario" routerLinkActive="active">
           Calendário
         </a>
-        
-        <a routerLink="/minhas-reservas" routerLinkActive="active">
-          Meus Agendamentos
+
+        <a routerLink="/busca" routerLinkActive="active">
+          Buscar
         </a>
-
-        <a routerLink="/relatorios">Relatórios</a>
-
         
         <a routerLink="/novo-recurso" class="btn-nav-action" routerLinkActive="active-btn">
-          + Nova Sala
+          + Sala
         </a>
 
+       
         @if (username) {
-          <span class="user-welcome">
-            Olá, <strong>{{ username }}</strong>
-          </span>
+          <div class="user-dropdown">
+            <button class="dropdown-trigger">
+              Olá, <strong>{{ username }}</strong> ▼
+            </button>
+            
+            <div class="dropdown-content">
+              <a routerLink="/minhas-reservas">📅 Meus Agendamentos</a>
+              <a routerLink="/relatorios">📄 Relatórios</a>
+              <hr class="dropdown-divider">
+              <a (click)="sair()" class="logout-item">🚪 Sair</a>
+            </div>
+          </div>
+        } @else {
+           
+            <a routerLink="/login">Login</a>
         }
 
-        <a (click)="sair()" class="logout-link">
-          Sair
-        </a>
       </nav>
 
     </div>

@@ -4,16 +4,19 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 import uuid
 
-
 class Recurso(models.Model):
     nome = models.CharField(max_length=100, unique=True)
     capacidade_maxima = models.PositiveIntegerField(default=1)
     localizacao = models.CharField(max_length=200, blank=True)
     descricao = models.TextField(blank=True)
     ativo = models.BooleanField(default=True)
+    
+   
+    foto = models.ImageField(upload_to='recursos/', null=True, blank=True)
 
     def __str__(self):
         return self.nome
+
 
 class Reserva(models.Model):
     recurso = models.ForeignKey(Recurso, on_delete=models.CASCADE, related_name='reservas')
@@ -45,9 +48,10 @@ class Reserva(models.Model):
             if not self.pk: 
                 raise ValidationError("Não é possível criar uma reserva para um horário no passado.")
 
+     
         conflitos = Reserva.objects.filter(
             recurso=self.recurso,
-            status__in=['C', 'P', "M"]
+            status__in=['C', 'P', 'M']
         )
         
         if self.pk:
@@ -60,7 +64,6 @@ class Reserva(models.Model):
         
         if conflitos.exists():
             conflito = conflitos.first()
-            
             if conflito.status == 'M':
                 msg = f"Este recurso está bloqueado para manutenção das {conflito.data_hora_inicio.strftime('%H:%M')} às {conflito.data_hora_fim.strftime('%H:%M')}."
             else:
@@ -73,7 +76,7 @@ class Reserva(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Reserva de {self.recurso.nome} por {self.usuario.username} ({self.data_hora_inicio.date()})"
+        return f"Reserva de {self.recurso.nome} ({self.status})"
 
 class CodigoConvite(models.Model):
     codigo = models.CharField(max_length=50, unique=True, editable=False)

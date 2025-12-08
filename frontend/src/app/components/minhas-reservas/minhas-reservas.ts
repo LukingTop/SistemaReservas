@@ -26,17 +26,23 @@ export class MinhasReservasComponent implements OnInit {
 
   carregarDados() {
     this.carregando = true;
+    
     this.apiService.getMinhasReservas().subscribe({
       next: (dados: any) => {
         this.reservas = dados;
-
-        this.cd.detectChanges();
-        
         this.carregando = false;
+        
+        
+        setTimeout(() => {
+          this.cd.detectChanges();
+        }, 0);
       },
       error: (erro: any) => {
         console.error('Erro ao buscar reservas:', erro);
         this.carregando = false;
+        setTimeout(() => {
+          this.cd.detectChanges();
+        }, 0);
       }
     });
   }

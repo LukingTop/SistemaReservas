@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { ApiService } from './services/api'; 
+import { NotificationService } from './services/notification';
 
 @Component({
   selector: 'app-root',
@@ -10,21 +11,30 @@ import { ApiService } from './services/api';
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'reserva-frontend';
   username: string | null = null;
-  
- 
   isDarkMode: boolean = false;
 
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(
+    private router: Router, 
+    private apiService: ApiService,
+    private notificationService: NotificationService 
+  ) {}
 
   ngOnInit() {
     this.apiService.usuario$.subscribe(nome => {
       this.username = nome;
+      
+      
+      if (nome) {
+        this.notificationService.connect();
+      } else {
+        this.notificationService.close();
+      }
     });
 
- 
+    
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       this.isDarkMode = true;
@@ -32,7 +42,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
     
@@ -45,8 +54,14 @@ export class AppComponent implements OnInit {
     }
   }
 
+  
+  ngOnDestroy() {
+    this.notificationService.close(); 
+  }
+
   sair() {
     this.apiService.logout(); 
+    this.notificationService.close(); 
     this.router.navigate(['/login']);
   }
 }

@@ -13,6 +13,8 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
+    'daphne',       
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -24,6 +26,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'reservas',
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -58,6 +66,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'reserva_salas.wsgi.application'
+ASGI_APPLICATION = 'reserva_salas.asgi.application' 
 
 
 DATABASES = {
@@ -122,3 +131,6 @@ EMAIL_HOST_USER = 'noreply.painelcatalogo@gmail.com'
 EMAIL_HOST_PASSWORD = '' + os.getenv('EMAIL_PASSWORD', '')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

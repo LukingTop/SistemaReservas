@@ -9,16 +9,30 @@
     @for (recurso of recursos; track recurso.id) {
       <div class="card">
         
+       
+        <div class="card-img-container">
+        
+          @if (recurso.foto) {
+           
+            <img [src]="recurso.foto" alt="{{ recurso.nome }}" class="card-img">
+          } @else {
+            <div class="card-img-placeholder">
+              <span>📷 Sem Foto</span>
+            </div>
+          }
+        </div>
+
         <div class="card-header">
           <h3>{{ recurso.nome }}</h3>
           
          
           @if (ehAdmin) {
             <div class="admin-actions">
+              
               <a [routerLink]="['/editar-recurso', recurso.id]" class="btn-icon btn-edit" title="Editar">
                 ✏️
               </a>
-         
+          
               <button (click)="excluir(recurso.id, recurso.nome)" class="btn-icon btn-trash" title="Excluir">
                 🗑️
               </button>
@@ -30,7 +44,7 @@
           <p><strong>Capacidade:</strong> {{ recurso.capacidade_maxima }} pessoas</p>
           <p><strong>Local:</strong> {{ recurso.localizacao }}</p>
           @if (!recurso.ativo) {
-             <p style="color: red; font-weight: bold;">🔴 INATIVO</p>
+             <p style="color: var(--danger-color); font-weight: bold;">🔴 INATIVO</p>
           }
         </div>
 
