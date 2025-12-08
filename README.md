@@ -140,8 +140,12 @@ Acesse a aplicação em: http://localhost:4200
 
 Desenvolvido por: 
 Raniel Santos
+
 Luís Felipe
+
 Guilherme Laurentino
+
 Enzo Rafael
+
 
 Projeto acadêmico sem fins comerciais.
