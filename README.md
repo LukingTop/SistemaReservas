@@ -139,6 +139,7 @@ Acesse a aplicação em: http://localhost:4200
 👥 Autores
 
 Desenvolvido por: 
+
 Raniel Santos
 
 Luís Felipe
