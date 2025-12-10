@@ -1,0 +1,116 @@
+.profile-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h2 {
+  color: var(--text-main); 
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+}
+
+.profile-card {
+  background-color: var(--bg-card); 
+  border: 1px solid var(--border-color); 
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 15px var(--shadow-color); 
+}
+
+.avatar-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  background-color: var(--primary-color); 
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  text-transform: uppercase;
+}
+
+.avatar-section h3 {
+    color: var(--text-main); 
+}
+
+.badge {
+  background-color: var(--text-secondary); 
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.badge.admin {
+  background-color: var(--accent-color); 
+}
+
+.form-group { margin-bottom: 20px; }
+
+label { 
+    display: block; 
+    margin-bottom: 8px; 
+    color: var(--text-secondary); 
+    font-weight: 500; 
+}
+
+input { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid var(--border-color); 
+    background: var(--bg-app); 
+    color: var(--text-main); 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+    font-size: 1rem;
+}
+
+.row { display: flex; gap: 20px; }
+.half { flex: 1; }
+
+.btn-save {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-color); 
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: filter 0.2s;
+}
+
+.btn-save:hover { filter: brightness(0.9); }
+
+.btn-save:disabled { 
+    background-color: var(--text-secondary); 
+    opacity: 0.7; 
+    cursor: not-allowed; 
+}
+
+hr { 
+    border: 0; 
+    border-top: 1px solid var(--border-color); 
+    margin: 30px 0; 
+}
+
+.loading {
+    text-align: center;
+    color: var(--text-secondary); 
+    font-size: 1.2rem;
+}

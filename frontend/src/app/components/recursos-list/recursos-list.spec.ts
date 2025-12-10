@@ -1,20 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; 
+import { RouterTestingModule } from '@angular/router/testing'; 
+import { RecursosListComponent } from './recursos-list'; 
 
-import { RecursosList } from './recursos-list';
-
-describe('RecursosList', () => {
-  let component: RecursosList;
-  let fixture: ComponentFixture<RecursosList>;
+describe('RecursosListComponent', () => { 
+  let component: RecursosListComponent; 
+  let fixture: ComponentFixture<RecursosListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecursosList]
+
+      imports: [RecursosListComponent, HttpClientTestingModule, RouterTestingModule] 
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RecursosList);
+    fixture = TestBed.createComponent(RecursosListComponent); 
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

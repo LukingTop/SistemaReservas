@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api'; 
 import Swal from 'sweetalert2'; 
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,8 @@ export class RegisterComponent {
     username: '',
     email: '',
     password: '',
+    first_name: '',
+    last_name: '',
     admin_code: '' 
   };
 

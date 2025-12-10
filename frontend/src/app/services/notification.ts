@@ -43,9 +43,7 @@ export class NotificationService {
         }
       });
       
-      // ======================================================================
       // ESTRATÉGIA DE RESILIÊNCIA (AUTO-RECONNECT)
-      // ======================================================================
       this.socket$.pipe(
         // O operador 'retry' intercepta erros no fluxo (ex: queda de internet ou servidor offline).
         // Ao invés de encerrar o programa, ele aguarda o tempo definido no 'timer'
@@ -76,9 +74,9 @@ export class NotificationService {
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 6000, // Tempo de exibição
+      timer: 6000, 
       timerProgressBar: true,
-      background: '#2c3e50', // Cores do tema do sistema
+      background: '#2c3e50', 
       color: '#ecf0f1',     
       iconColor: '#3498db'   
     });

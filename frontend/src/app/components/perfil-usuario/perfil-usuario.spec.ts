@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing'; 
-import { RouterTestingModule } from '@angular/router/testing'; 
 import { FormsModule } from '@angular/forms'; 
-import { RecursoFormComponent } from './recurso-form';
 
-describe('RecursoFormComponent', () => { 
-  let component: RecursoFormComponent;
-  let fixture: ComponentFixture<RecursoFormComponent>;
+import { PerfilUsuarioComponent } from './perfil-usuario';
+
+describe('PerfilUsuarioComponent', () => { 
+  let component: PerfilUsuarioComponent; 
+  let fixture: ComponentFixture<PerfilUsuarioComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       
-      imports: [RecursoFormComponent, HttpClientTestingModule, RouterTestingModule, FormsModule]
+      imports: [PerfilUsuarioComponent, HttpClientTestingModule, FormsModule]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RecursoFormComponent); 
+    fixture = TestBed.createComponent(PerfilUsuarioComponent); 
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

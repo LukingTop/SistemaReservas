@@ -14,12 +14,11 @@ import { Observable, BehaviorSubject } from 'rxjs';
 })
 export class ApiService {
   
-  // URL base da API (em produção, isso viria de environment.ts)
+  // URL base da API 
   private apiUrl = 'http://127.0.0.1:8000'; 
 
-  // ==========================================================================
   // GERENCIAMENTO DE ESTADO REATIVO (RxJS)
-  // ==========================================================================
+  
   
   // BehaviorSubject: Um tipo de Observable que guarda o valor atual.
   // Útil para que componentes saibam se o usuário está logado assim que carregam,
@@ -35,9 +34,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // ==========================================================================
   // AUTENTICAÇÃO E SESSÃO
-  // ==========================================================================
 
   /**
    * Realiza o login e obtém o Token DRF.
@@ -45,6 +42,14 @@ export class ApiService {
    */
   login(credenciais: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/reservas/api-token-auth/`, credenciais);
+  }
+
+  getPerfil(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/reservas/api/perfil/`, { headers: this.getAuthHeaders() });
+  }
+
+  atualizarPerfil(dados: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/reservas/api/perfil/`, dados, { headers: this.getAuthHeaders() });
   }
 
   /**
@@ -88,9 +93,7 @@ export class ApiService {
     return headers;
   }
 
-  // ==========================================================================
   // RECURSOS (CRUD)
-  // ==========================================================================
 
   getRecursos(): Observable<any> {
     return this.http.get(`${this.apiUrl}/reservas/api/recursos/`, { headers: this.getAuthHeaders() });
@@ -120,9 +123,7 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/reservas/api/recursos/buscar_disponiveis/${params}`, { headers: this.getAuthHeaders() });
   }
 
-  // ==========================================================================
   // RESERVAS
-  // ==========================================================================
 
   getReservas(): Observable<any> {
     return this.http.get(`${this.apiUrl}/reservas/api/reservas/`, { headers: this.getAuthHeaders() });
@@ -140,9 +141,7 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/reservas/api/reservas/${id}/`, { headers: this.getAuthHeaders() });
   }
 
-  // ==========================================================================
   // RECUPERAÇÃO DE SENHA
-  // ==========================================================================
 
   esqueciSenha(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/reservas/api/password_reset/`, { email });
@@ -152,9 +151,7 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/reservas/api/password_reset/confirm/`, dados);
   }
 
-  // ==========================================================================
   // RELATÓRIOS (Manipulação de Blobs)
-  // ==========================================================================
 
   /**
    * Solicita o PDF. Note o 'responseType: blob'.

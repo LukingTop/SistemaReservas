@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api'; 
 import { RouterLink } from '@angular/router';
+import Swal from 'sweetalert2'; 
 
 @Component({
   selector: 'app-recursos-list',
@@ -13,7 +14,7 @@ import { RouterLink } from '@angular/router';
 export class RecursosListComponent implements OnInit {
   
   recursos: any[] = [];
-  ehAdmin: boolean = false; // 🌟 Controle de permissão
+  ehAdmin: boolean = false;
 
   constructor(
     private apiService: ApiService,
@@ -23,7 +24,6 @@ export class RecursosListComponent implements OnInit {
   ngOnInit(): void {
     this.carregarRecursos();
     
-  
     this.apiService.isAdmin$.subscribe(isAdmin => {
       this.ehAdmin = isAdmin;
     });
@@ -32,6 +32,7 @@ export class RecursosListComponent implements OnInit {
   carregarRecursos() {
     this.apiService.getRecursos().subscribe({
       next: (dados: any) => {
+        console.log('Dados recebidos:', dados);
         this.recursos = dados;
         this.cd.detectChanges();
       },
@@ -39,19 +40,34 @@ export class RecursosListComponent implements OnInit {
     });
   }
 
-  
   excluir(id: number, nome: string) {
-    if (confirm(`Tem certeza que deseja excluir o recurso "${nome}"? Isso apagará todas as reservas associadas a ele.`)) {
-      this.apiService.excluirRecurso(id).subscribe({
-        next: () => {
-          alert('Recurso excluído com sucesso!');
-          this.carregarRecursos(); 
-        },
-        error: (erro) => {
-          console.error(erro);
-          alert('Erro ao excluir. Verifique se você tem permissão.');
-        }
-      });
-    }
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: `Você está prestes a excluir o recurso "${nome}". Isso apagará todas as reservas associadas!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33', 
+      cancelButtonColor: '#3085d6', 
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        this.apiService.excluirRecurso(id).subscribe({
+          next: () => {
+            Swal.fire(
+              'Excluído!',
+              `O recurso "${nome}" foi removido.`,
+              'success'
+            );
+            this.carregarRecursos(); 
+          },
+          error: (erro) => {
+            console.error(erro);
+            Swal.fire('Erro', 'Não foi possível excluir. Verifique suas permissões.', 'error');
+          }
+        });
+      }
+    });
   }
 }

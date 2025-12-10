@@ -17,8 +17,6 @@ class NotificacaoConsumer(AsyncWebsocketConsumer):
         Evento disparado quando um cliente (Frontend) tenta abrir uma conexão WebSocket.
         """
         # Define um nome de grupo estático.
-        # Em um app de chat, isso seria dinâmico (ex: "sala_1", "sala_2").
-        # Aqui, todos os admins escutam o mesmo "rádio".
         self.group_name = "admin_reservas"
 
         # Adiciona o canal atual (self.channel_name) ao grupo.
@@ -43,9 +41,7 @@ class NotificacaoConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    # ------------------------------------------------------------------
     # Manipuladores de Eventos (Event Handlers)
-    # ------------------------------------------------------------------
 
     async def enviar_notificacao(self, event):
         """

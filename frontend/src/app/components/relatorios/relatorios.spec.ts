@@ -1,20 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; 
+import { RelatoriosComponent } from './relatorios'; 
 
-import { Relatorios } from './relatorios';
-
-describe('Relatorios', () => {
-  let component: Relatorios;
-  let fixture: ComponentFixture<Relatorios>;
+describe('RelatoriosComponent', () => { 
+  let component: RelatoriosComponent; 
+  let fixture: ComponentFixture<RelatoriosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Relatorios]
+      
+      imports: [RelatoriosComponent, HttpClientTestingModule] 
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Relatorios);
+    fixture = TestBed.createComponent(RelatoriosComponent); 
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

@@ -9,31 +9,44 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db.models import Q
 from .models import Recurso, Reserva, CodigoConvite
-from .serializers import RecursoSerializer, ReservaSerializer, UserSerializer
+from .serializers import RecursoSerializer, ReservaSerializer, UserSerializer, UserProfileSerializer
+
+# Imports para geração de Relatórios
 import openpyxl
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 import datetime
+
+# Imports para WebSocket (Tempo Real)
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+
 class RecursoViewSet(viewsets.ModelViewSet):
     """
-    API endpoint para gerenciar os recursos (salas, laboratórios, equipamentos).
-    Permite listagem pública (leitura), mas modificação apenas por autenticados.
+    API para gerenciamento de Recursos (Salas, Equipamentos).
+    Regra de Acesso:
+    - Leitura (GET): Pública ou Autenticada (dependendo da configuração).
+    - Escrita (POST/PUT/DELETE): Apenas Administradores.
     """
     queryset = Recurso.objects.all()
     serializer_class = RecursoSerializer
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly] 
 
     @action(detail=False, methods=['get'])
     def buscar_disponiveis(self, request):
         """
-        Algoritmo de verificação de disponibilidade.
-        Recebe 'inicio', 'fim' e 'capacidade'.
-        Retorna apenas recursos que NÃO possuem conflito de horário no intervalo solicitado.
+        Algoritmo de Busca Inteligente de Disponibilidade.
+        
+        Objetivo: Encontrar salas que atendam a uma capacidade mínima e que
+        NÃO estejam ocupadas em um determinado intervalo de tempo.
+        
+        Parâmetros de URL:
+        - inicio: Data/Hora de início desejada.
+        - fim: Data/Hora de fim desejada.
+        - capacidade: Número mínimo de pessoas.
         """
         inicio = request.query_params.get('inicio')
         fim = request.query_params.get('fim')
@@ -42,29 +55,30 @@ class RecursoViewSet(viewsets.ModelViewSet):
         if not inicio or not fim:
             return Response({"erro": "Datas de início e fim são obrigatórias."}, status=400)
 
-        # Filtra recursos que atendem à capacidade mínima solicitada
+        # 1. Filtro Básico: Salas ativas e com capacidade suficiente
         recursos = Recurso.objects.filter(ativo=True, capacidade_maxima__gte=capacidade)
 
-        # Lógica de Conflito:
-        # Busca reservas que estejam confirmadas (C), pendentes (P) ou em manutenção (M)
-        # O conflito ocorre se a reserva existente começar ANTES do fim solicitado
-        # E terminar DEPOIS do início solicitado.
+        # 2. Lógica de Exclusão (Overlap):
+        # Identificamos as reservas que COLIDEM com o horário desejado.
+        # Regra: (InicioReserva < FimDesejado) E (FimReserva > InicioDesejado)
         reservas_conflitantes = Reserva.objects.filter(
-            status__in=['C', 'P', 'M'],
+            status__in=['C', 'P', 'M'], # Considera Confirmadas, Pendentes e Manutenção
             data_hora_inicio__lt=fim,
             data_hora_fim__gt=inicio
         ).values_list('recurso_id', flat=True)
 
-        # Exclui da lista de recursos aqueles que possuem IDs na lista de conflitos
+        # 3. Subtração de Conjuntos:
+        # Lista Final = (Todas as Salas) - (Salas Ocupadas)
         disponiveis = recursos.exclude(id__in=reservas_conflitantes)
+        
         serializer = self.get_serializer(disponiveis, many=True)
         return Response(serializer.data)
 
 
 class ReservaViewSet(viewsets.ModelViewSet):
     """
-    API endpoint central para criação e gerenciamento de reservas.
-    Contém a lógica de automação de aprovação, envio de e-mails e WebSockets.
+    API Central para Gerenciamento de Reservas.
+    Contém a lógica de orquestração entre Banco de Dados, E-mail e WebSockets.
     """
     queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
@@ -73,26 +87,27 @@ class ReservaViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """
-        Sobrescreve o salvamento padrão para injetar lógica de negócios automáticas:
-        1. Define status automático (Aprovado para Admins, Pendente para Comuns).
-        2. Envia e-mail de confirmação.
-        3. Envia notificação em tempo real via WebSocket (Django Channels).
+        Intercepta a criação de uma reserva para injetar regras de negócio:
+        1. Define o status automaticamente (Admin -> Aprovado, Aluno -> Pendente).
+        2. Processa bloqueios administrativos (Manutenção).
+        3. Envia notificações assíncronas (E-mail e WebSocket).
         """
         user = self.request.user
         eh_manutencao = self.request.data.get('eh_manutencao', False)
-        novo_status = 'P' # Padrão: Pendente
+        novo_status = 'P' # Status padrão
 
-        # Automação 1: Staff tem aprovação imediata
+        # Regra de Hierarquia
         if user.is_staff:
             if eh_manutencao:
-                novo_status = 'M' # Manutenção
+                novo_status = 'M' # Bloqueio técnico
             else:
-                novo_status = 'C' # Confirmado
+                novo_status = 'C' # Aprovação automática
         
-        # Salva a instância com os dados processados
+        # Salva a instância no banco
         reserva = serializer.save(usuario=user, status=novo_status)
         
-        # Automação 2: Envio de E-mail (Assíncrono na prática seria ideal, mas aqui é síncrono para simplicidade acadêmica)
+        # Notificação por E-mail (SMTP)
+        # Envia apenas se não for um bloqueio de manutenção
         if novo_status != 'M' and user.email:
             assunto = 'Confirmação de Reserva'
             mensagem = f"""
@@ -103,22 +118,21 @@ class ReservaViewSet(viewsets.ModelViewSet):
             Status: {reserva.get_status_display()}
             """
             try:
-                # fail_silently=True evita que o sistema quebre se o servidor SMTP falhar
+                # fail_silently=True impede que erro de rede derrube a requisição
                 send_mail(subject=assunto, message=mensagem, from_email=None, recipient_list=[user.email], fail_silently=True)
             except Exception as e:
                 print(f"Erro ao enviar e-mail: {e}")
 
-        # Automação 3: Notificação Real-time via WebSocket
+        # Notificação em Tempo Real (WebSockets/Django Channels)
+        # Envia mensagem para o grupo 'admin_reservas' onde o painel administrativo está conectado
         try:
             channel_layer = get_channel_layer()
             mensagem_ws = f"Nova reserva: {reserva.recurso.nome} por {user.username} ({reserva.get_status_display()})"
             
-            # Como views são código síncrono e Channels é assíncrono, usamos async_to_sync
-            # Envia para o grupo 'admin_reservas' que o front-end administrativo escuta
             async_to_sync(channel_layer.group_send)(
-                "admin_reservas",
+                "admin_reservas", 
                 {
-                    "type": "enviar_notificacao", # Método que será chamado no Consumer
+                    "type": "enviar_notificacao", # Método no Consumer
                     "message": mensagem_ws
                 }
             )
@@ -127,18 +141,14 @@ class ReservaViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def meus_agendamentos(self, request):
-        """Retorna apenas as reservas do usuário logado."""
+        """Filtra e retorna apenas as reservas pertencentes ao usuário logado."""
         minhas_reservas = Reserva.objects.filter(usuario=request.user)
         serializer = self.get_serializer(minhas_reservas, many=True)
         return Response(serializer.data)
 
-    
     @action(detail=False, methods=['get'])
     def relatorio_pdf(self, request):
-        """
-        Gera relatório em PDF usando a biblioteca ReportLab.
-        Útil para arquivamento físico ou burocracia acadêmica.
-        """
+        """Gera um PDF dinâmico com a biblioteca ReportLab."""
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="reservas_relatorio.pdf"'
 
@@ -146,9 +156,9 @@ class ReservaViewSet(viewsets.ModelViewSet):
         p.setFont("Helvetica-Bold", 16)
         p.drawString(100, 800, "Relatório Geral de Reservas")
         
+        # Desenha cabeçalho
         p.setFont("Helvetica-Bold", 10)
         y = 750
-        # Cabeçalho da tabela
         p.drawString(50, y, "ID")
         p.drawString(80, y, "Recurso")
         p.drawString(200, y, "Usuário")
@@ -157,6 +167,7 @@ class ReservaViewSet(viewsets.ModelViewSet):
         p.line(50, y-5, 550, y-5)
         y -= 25
 
+        # Filtra dados com base na permissão
         if request.user.is_staff:
             reservas = Reserva.objects.all().order_by('-data_hora_inicio')
         else:
@@ -164,8 +175,7 @@ class ReservaViewSet(viewsets.ModelViewSet):
 
         p.setFont("Helvetica", 9)
         for reserva in reservas:
-            # Lógica de paginação simples
-            if y < 50:
+            if y < 50: # Paginação manual
                 p.showPage()
                 y = 800
                 p.setFont("Helvetica", 9)
@@ -184,10 +194,7 @@ class ReservaViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def relatorio_excel(self, request):
-        """
-        Exporta dados para Excel (XLSX) usando OpenPyXL.
-        Permite manipulação posterior dos dados pelos gestores.
-        """
+        """Gera uma planilha Excel (.xlsx) usando OpenPyXL."""
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="reservas_relatorio.xlsx"'
 
@@ -223,16 +230,32 @@ class ReservaViewSet(viewsets.ModelViewSet):
 
 
 class RegisterView(generics.CreateAPIView):
-    """Endpoint público para cadastro de novos usuários."""
+    """View pública para cadastro de novos usuários."""
     queryset = User.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] 
     serializer_class = UserSerializer
+    
+
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    """
+    Endpoint para ver e editar o próprio perfil.
+    GET: Retorna dados do usuário logado.
+    PUT/PATCH: Atualiza dados (ex: email, senha).
+    """
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        # Garante que o usuário só veja/edite o SEU próprio perfil
+        return self.request.user
+
 
 
 class CustomAuthToken(ObtainAuthToken):
     """
-    Retorna o Token de Autenticação + Dados extras do usuário.
-    Evita que o frontend precise fazer uma segunda requisição para saber quem logou.
+    Personalização do Endpoint de Login.
+    Retorna não apenas o Token, mas também metadados do usuário (Nome, Email, Permissões)
+    para evitar requisições extras do Frontend.
     """
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
@@ -243,7 +266,7 @@ class CustomAuthToken(ObtainAuthToken):
         return Response({
             'token': token.key,
             'user_id': user.pk,
-            'username': user.username,
+            'username': user.username, 
             'email': user.email,
             'is_staff': user.is_staff
         })

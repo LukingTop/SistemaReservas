@@ -1,0 +1,55 @@
+<div class="profile-container">
+  <h2>Meu Perfil</h2>
+
+  
+  @if (carregando && !usuario.username) {
+    <p class="loading">Carregando dados...</p>
+  } @else {
+    <div class="profile-card">
+      
+      
+      <div class="avatar-section">
+        <div class="avatar-circle">
+            
+            {{ usuario.username.charAt(0).toUpperCase() }}
+        </div>
+        <h3>{{ usuario.username }}</h3>
+        
+        
+        <span class="badge" [class.admin]="usuario.is_staff">
+            {{ usuario.is_staff ? 'Administrador / Docente' : 'Aluno' }}
+        </span>
+      </div>
+
+      <hr>
+
+      
+      <form (ngSubmit)="salvarAlteracoes()" #formPerfil="ngForm">
+        
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" [(ngModel)]="usuario.email" name="email" required email>
+        </div>
+
+        <div class="row">
+            <div class="form-group half">
+                <label>Nome</label>
+                <input type="text" [(ngModel)]="usuario.first_name" name="first_name" placeholder="Seu nome">
+            </div>
+            <div class="form-group half">
+                <label>Sobrenome</label>
+                <input type="text" [(ngModel)]="usuario.last_name" name="last_name" placeholder="Seu sobrenome">
+            </div>
+        </div>
+        
+        <div class="actions">
+           
+            <button type="submit" class="btn-save" [disabled]="!formPerfil.valid || carregando">
+                @if (carregando) { ⏳ Salvando... } @else { Salvar Alterações }
+            </button>
+        </div>
+
+      </form>
+    </div>
+  }
+</div>

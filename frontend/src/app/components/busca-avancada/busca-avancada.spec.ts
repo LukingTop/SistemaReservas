@@ -1,20 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; // 🌟 Importante para o ApiService
 
-import { BuscaAvancada } from './busca-avancada';
+// 👇 1. Importe a classe correta
+import { BuscaAvancadaComponent } from './busca-avancada';
 
-describe('BuscaAvancada', () => {
-  let component: BuscaAvancada;
-  let fixture: ComponentFixture<BuscaAvancada>;
+describe('BuscaAvancadaComponent', () => { // 👇 2. Nome correto
+  let component: BuscaAvancadaComponent; // 👇 3. Tipagem correta
+  let fixture: ComponentFixture<BuscaAvancadaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BuscaAvancada]
+      // 👇 4. Use a classe correta e adicione o módulo de teste HTTP
+      imports: [BuscaAvancadaComponent, HttpClientTestingModule]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BuscaAvancada);
+    fixture = TestBed.createComponent(BuscaAvancadaComponent); // 👇 5. Criação correta
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

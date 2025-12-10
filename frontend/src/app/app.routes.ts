@@ -11,6 +11,7 @@ import { BuscaAvancadaComponent } from './components/busca-avancada/busca-avanca
 import { RelatoriosComponent } from './components/relatorios/relatorios';
 import { EsqueciSenhaComponent } from './components/esqueci-senha/esqueci-senha';
 import { NovaSenhaComponent } from './components/nova-senha/nova-senha';
+import { PerfilUsuarioComponent } from './components/perfil-usuario/perfil-usuario';
 
 export const routes: Routes = [
   
@@ -49,5 +50,8 @@ export const routes: Routes = [
     path: 'editar-recurso/:id',  
     component: RecursoFormComponent, 
     canActivate: [authGuard] 
-  }
+  },
+  { path: 'perfil', 
+    component: PerfilUsuarioComponent, 
+    canActivate: [authGuard] }
 ];

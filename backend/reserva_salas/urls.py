@@ -4,10 +4,11 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from django.views.decorators.csrf import csrf_exempt
-from reservas.api_views import RecursoViewSet, ReservaViewSet, RegisterView, CustomAuthToken
+from reservas.api_views import RecursoViewSet, ReservaViewSet, RegisterView, CustomAuthToken, UserProfileView
 from reservas.admin import admin_site, RecursoAdmin, ReservaAdmin, CodigoConviteAdmin
 from reservas.models import Recurso, Reserva, CodigoConvite
 from django.contrib.auth.models import User, Group
+
 
 
 router = DefaultRouter()
@@ -36,6 +37,8 @@ urlpatterns = [
     
     
     path('reservas/api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+
+    path('reservas/api/perfil/', UserProfileView.as_view(), name='user_profile'),
     
    
     path('admin/', admin_site.urls), 
